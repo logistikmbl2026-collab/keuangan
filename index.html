@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kas Robert Yosua Saragih</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js untuk Grafik Bulanan -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .transaction-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .transaction-list::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 8px;
+        }
+        .transaction-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 8px;
+        }
+        .transaction-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        
+        @keyframes scrollMarquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            animation: scrollMarquee 50s linear infinite;
+            will-change: transform;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex justify-center items-center p-4 relative overflow-hidden">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-900/95 backdrop-blur-sm flex justify-center items-center z-[100] transition-opacity duration-500 px-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm transform transition-all">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <i class="fa-solid fa-lock text-4xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Kas Robert Yosua Saragih</h2>
+                <p class="text-sm text-gray-500 mt-2">Silakan masuk untuk melanjutkan</p>
+            </div>
+            
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" id="username" class="pl-10 w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-shadow" placeholder="Masukkan username" required autocomplete="off">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-key text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" class="pl-10 w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-shadow" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <p id="login-error" class="text-red-500 text-sm text-center hidden font-medium bg-red-50 p-2 rounded-lg"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Username atau Password salah!</p>
+                
+                <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-md px-5 py-3.5 text-center transition-all shadow-md hover:shadow-lg">
+                    Masuk Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden flex flex-col h-full max-h-[850px]">
+        
+        <!-- Header / Summary Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white shadow-md relative">
+            
+            <!-- Sync Status Indicator (Moved to top-left) -->
+            <div id="sync-status" class="absolute top-4 left-4 text-[10px] bg-white/20 px-2.5 py-1 rounded-full hidden flex items-center gap-1 backdrop-blur-sm shadow-sm border border-white/10 z-10">
+                <i class="fa-solid fa-cloud-arrow-up animate-bounce"></i> Syncing...
+            </div>
+
+            <!-- Current Date Display (Top Right) -->
+            <div id="current-date-display" class="absolute top-4 right-4 text-[11px] bg-white/15 px-2.5 py-1 rounded-full backdrop-blur-sm shadow-sm border border-white/10 flex items-center gap-1.5 font-medium text-blue-100">
+                <i class="fa-regular fa-calendar-days"></i> <span id="date-text">--</span>
+            </div>
+
+            <h1 class="text-xl font-semibold mb-4 text-center pt-2">Buku Kas Robert Yosua Saragih</h1>
+
+            <div class="flex flex-col items-center mb-6">
+                <span class="text-blue-100 text-sm font-medium">Total Saldo</span>
+                <h2 id="total-balance" class="text-4xl font-bold tracking-tight">Rp 0</h2>
+                
+                <!-- Target Progress Widget -->
+                <div class="w-full max-w-xs mt-4 bg-white/10 rounded-xl p-3 border border-white/20 shadow-inner">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-blue-100">Target: 
+                            <span id="target-display" class="font-semibold text-white cursor-pointer hover:text-blue-200 transition-colors" onclick="openTargetModal()" title="Ubah Target">
+                                Rp 0 <i class="fa-solid fa-pen text-[10px] ml-1"></i>
+                            </span>
+                        </span>
+                        <span id="target-status" class="text-xs font-semibold text-white">Kurang Rp 0</span>
+                    </div>
+                    <div class="w-full bg-black/20 rounded-full h-2">
+                        <div id="target-progress" class="bg-yellow-400 h-2 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between gap-4">
+                <!-- Income Card -->
+                <div class="bg-white/20 rounded-xl p-3 flex-1 flex flex-col items-center backdrop-blur-sm border border-white/10 shadow-inner">
+                    <div class="bg-green-400 text-white rounded-full w-8 h-8 flex items-center justify-center mb-1">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </div>
+                    <span class="text-xs text-blue-100 mb-1">Pemasukan</span>
+                    <span id="total-income" class="font-semibold text-sm">Rp 0</span>
+                </div>
+                
+                <!-- Expense Card -->
+                <div class="bg-white/20 rounded-xl p-3 flex-1 flex flex-col items-center backdrop-blur-sm border border-white/10 shadow-inner">
+                    <div class="bg-red-400 text-white rounded-full w-8 h-8 flex items-center justify-center mb-1">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </div>
+                    <span class="text-xs text-blue-100 mb-1">Pengeluaran</span>
+                    <span id="total-expense" class="font-semibold text-sm">Rp 0</span>
+                </div>
+            </div>
+            
+            <!-- Add Button -->
+            <button onclick="openModal()" class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-400 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 border-4 border-white focus:outline-none focus:ring-2 focus:ring-blue-300 z-10">
+                <i class="fa-solid fa-plus text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Menu Navigation Tabs -->
+        <div class="flex border-b border-gray-200 bg-white px-6 pt-4 gap-4">
+            <button onclick="switchTab('history')" id="tab-history" class="pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Riwayat
+            </button>
+            <button onclick="switchTab('chart')" id="tab-chart" class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-chart-column"></i> Grafik Bulanan
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6 pt-4 overflow-hidden flex flex-col bg-gray-50 relative">
+            
+            <!-- Tab 1: Riwayat Transaksi -->
+            <div id="view-history" class="flex-1 flex flex-col overflow-hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-gray-700 text-sm">Daftar Transaksi</h3>
+                    <span class="text-xs text-gray-400" id="transaction-count">0 transaksi</span>
+                </div>
+                
+                <!-- List Container -->
+                <div id="transaction-list" class="transaction-list flex-1 overflow-y-auto space-y-3 pb-4">
+                    <div class="text-center text-gray-400 text-sm mt-10" id="empty-state">
+                        <i class="fa-solid fa-spinner fa-spin text-4xl mb-3 text-blue-500"></i>
+                        <p>Memuat data dari Spreadsheet...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Grafik Bulanan -->
+            <div id="view-chart" class="flex-1 flex flex-col overflow-y-auto hidden pb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-gray-700 text-sm">Analisis Bulanan</h3>
+                    <select id="chart-year-filter" onchange="renderMonthlyChart()" class="text-xs bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 shadow-sm outline-none cursor-pointer font-medium">
+                        <option value="all">Semua Tahun</option>
+                    </select>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-center items-center relative min-h-[300px]">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Running Text (Marquee) Bottom Bar -->
+    <div class="fixed bottom-0 left-0 w-full bg-slate-800 text-blue-100 overflow-hidden py-2.5 z-40 shadow-lg border-t border-slate-700">
+        <div class="animate-marquee whitespace-nowrap text-sm font-medium tracking-wide flex gap-12">
+            <span>"Hemat bukan berarti hidup menderita, tapi memilih membeli ketenangan pikiran daripada tumpukan barang rongsokan di kemudian hari."</span>
+            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span>"Dana darurat bukan sekadar saldo tabungan, melainkan pelindung martabat agar tidak perlu memohon atau berutang saat krisis datang."</span>
+            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span>"Kemewahan tertinggi adalah memiliki cukup tabungan untuk punya pilihan berkata 'tidak' pada situasi atau pekerjaan yang tidak kamu sukai."</span>
+            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span>"Jangan gadaikan lelah kerja keras berminggu-minggu hanya demi sensasi taruhan beberapa detik di layar ponsel."</span>
+            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span>"Gaji didapat dari menukar waktu, tenaga, dan pikiran yang nyata. Membakarnya untuk hal sia-sia sama saja meremehkan harga dirimu sendiri."</span>
+            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span>"Kaya itu proses akumulasi yang lambat dan disiplin, bukan sulap kilat lewat tebak angka atau putaran mesin."</span>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transaction-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content">
+            
+            <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="font-semibold text-lg text-gray-800">Tambah Transaksi</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="transaction-form" class="p-5 space-y-4">
+                <div class="flex p-1 bg-gray-100 rounded-lg">
+                    <label class="flex-1 text-center cursor-pointer">
+                        <input type="radio" name="type" value="income" class="peer sr-only" checked>
+                        <div class="py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-green-600 font-medium text-sm text-gray-500 transition-all">
+                            Pemasukan
+                        </div>
+                    </label>
+                    <label class="flex-1 text-center cursor-pointer">
+                        <input type="radio" name="type" value="expense" class="peer sr-only">
+                        <div class="py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-red-500 font-medium text-sm text-gray-500 transition-all">
+                            Pengeluaran
+                        </div>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">Rp</span>
+                        </div>
+                        <input type="text" id="amount" required inputmode="numeric"
+                            class="pl-10 w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block text-lg font-semibold" 
+                            placeholder="0">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                    <input type="text" id="description" required
+                        class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block" 
+                        placeholder="Cth: Gaji, Makan Siang, Bensin...">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                    <select id="category" class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block">
+                    </select>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors">
+                        Simpan Transaksi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Target Modal -->
+    <div id="target-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="target-modal-content">
+            
+            <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="font-semibold text-lg text-gray-800">Atur Target Saldo</h3>
+                <button onclick="closeTargetModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="target-form" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Target Saldo (Rp)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">Rp</span>
+                        </div>
+                        <input type="text" id="target-input" required inputmode="numeric"
+                            class="pl-10 w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block text-lg font-semibold" 
+                            placeholder="Contoh: 10.000.000">
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors">
+                        Simpan Target
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let transactions = [];
+        let targetBalance = 10000000;
+        let financialChartInstance = null;
+        
+        const SPREADSHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzkZSBoIxRB8treTJxslQW58JftVO6z6SE7OQyuAoCsYnnOxZKg45YUlxnTAkIOs1x8/exec"; 
+
+        const categories = {
+            income: [
+                { id: 'salary', name: 'Gaji', icon: 'fa-money-bill-wave', color: 'bg-green-100 text-green-600' },
+                { id: 'bonus', name: 'Bonus', icon: 'fa-gift', color: 'bg-emerald-100 text-emerald-600' },
+                { id: 'investment', name: 'Investasi', icon: 'fa-arrow-trend-up', color: 'bg-teal-100 text-teal-600' },
+                { id: 'other_in', name: 'Lainnya', icon: 'fa-plus', color: 'bg-gray-200 text-gray-600' }
+            ],
+            expense: [
+                { id: 'food', name: 'Makanan & Minuman', icon: 'fa-utensils', color: 'bg-orange-100 text-orange-600' },
+                { id: 'transport', name: 'Transportasi', icon: 'fa-car', color: 'bg-blue-100 text-blue-600' },
+                { id: 'shopping', name: 'Belanja', icon: 'fa-bag-shopping', color: 'bg-pink-100 text-pink-600' },
+                { id: 'bills', name: 'Tagihan', icon: 'fa-file-invoice-dollar', color: 'bg-purple-100 text-purple-600' },
+                { id: 'entertainment', name: 'Hiburan', icon: 'fa-film', color: 'bg-yellow-100 text-yellow-600' },
+                { id: 'health', name: 'Kesehatan', icon: 'fa-notes-medical', color: 'bg-red-100 text-red-600' },
+                { id: 'other_out', name: 'Lainnya', icon: 'fa-minus', color: 'bg-gray-200 text-gray-600' }
+            ]
+        };
+
+        const updateHeaderDate = () => {
+            const now = new Date();
+            const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', options);
+            const dateTextEl = document.getElementById('date-text');
+            if (dateTextEl) dateTextEl.textContent = dateStr;
+        };
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
+        };
+
+        const formatDate = (dateString) => {
+            const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        };
+
+        const generateId = () => Math.random().toString(36).substr(2, 9);
+
+        const getCategoryDetails = (type, categoryId) => {
+            return categories[type].find(c => c.id === categoryId) || categories[type][categories[type].length - 1];
+        };
+
+        const switchTab = (tabName) => {
+            const tabHistory = document.getElementById('tab-history');
+            const tabChart = document.getElementById('tab-chart');
+            const viewHistory = document.getElementById('view-history');
+            const viewChart = document.getElementById('view-chart');
+
+            if (tabName === 'history') {
+                tabHistory.className = "pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
+                tabChart.className = "pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2";
+                viewHistory.classList.remove('hidden');
+                viewChart.classList.add('hidden');
+            } else {
+                tabChart.className = "pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
+                tabHistory.className = "pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2";
+                viewChart.classList.remove('hidden');
+                viewHistory.classList.add('hidden');
+                renderMonthlyChart();
+            }
+        };
+
+        const updateSummary = () => {
+            const income = transactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0);
+            const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+            const balance = income - expense;
+
+            document.getElementById('total-income').textContent = formatRupiah(income);
+            document.getElementById('total-expense').textContent = formatRupiah(expense);
+            document.getElementById('total-balance').textContent = formatRupiah(balance);
+            
+            const targetDisplay = document.getElementById('target-display');
+            const targetStatus = document.getElementById('target-status');
+            const targetProgress = document.getElementById('target-progress');
+
+            targetDisplay.innerHTML = `${formatRupiah(targetBalance)} <i class="fa-solid fa-pen text-[10px] ml-1"></i>`;
+
+            let progressPercentage = 0;
+            if (targetBalance > 0) {
+                if (balance <= 0) {
+                    progressPercentage = 0;
+                    targetStatus.textContent = `Kurang ${formatRupiah(targetBalance)}`;
+                    targetStatus.className = "text-xs font-semibold text-yellow-300";
+                } else if (balance < targetBalance) {
+                    progressPercentage = (balance / targetBalance) * 100;
+                    const shortfall = targetBalance - balance;
+                    targetStatus.textContent = `Kurang ${formatRupiah(shortfall)}`;
+                    targetStatus.className = "text-xs font-semibold text-yellow-300";
+                    targetProgress.classList.remove('bg-green-400');
+                    targetProgress.classList.add('bg-yellow-400');
+                } else {
+                    progressPercentage = 100;
+                    targetStatus.textContent = "Target Tercapai! 🎉";
+                    targetStatus.className = "text-xs font-semibold text-green-300";
+                    targetProgress.classList.remove('bg-yellow-400');
+                    targetProgress.classList.add('bg-green-400');
+                }
+            } else {
+                targetStatus.textContent = "Set Target Anda";
+                targetStatus.className = "text-xs font-semibold text-white";
+            }
+            
+            targetProgress.style.width = `${Math.min(progressPercentage, 100)}%`;
+
+            const balanceEl = document.getElementById('total-balance');
+            if (balance < 0) {
+                balanceEl.classList.add('text-red-300');
+                balanceEl.classList.remove('text-white');
+            } else {
+                balanceEl.classList.remove('text-red-300');
+                balanceEl.classList.add('text-white');
+            }
+            
+            document.getElementById('transaction-count').textContent = `${transactions.length} transaksi`;
+        };
+
+        const renderTransactions = () => {
+            const listEl = document.getElementById('transaction-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            Array.from(listEl.children).forEach(child => {
+                if(child.id !== 'empty-state') {
+                    listEl.removeChild(child);
+                }
+            });
+
+            if (transactions.length === 0) {
+                emptyState.innerHTML = `
+                    <i class="fa-solid fa-receipt text-4xl mb-3 text-gray-300"></i>
+                    <p>Belum ada transaksi.</p>
+                    <p class="text-xs mt-1">Klik tombol + untuk menambah data.</p>
+                `;
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedTransactions.forEach(t => {
+                const catInfo = getCategoryDetails(t.type, t.category);
+                const isIncome = t.type === 'income';
+                const sign = isIncome ? '+' : '-';
+                const amountColor = isIncome ? 'text-green-600' : 'text-gray-800';
+
+                const item = document.createElement('div');
+                item.className = 'bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow group';
+                item.innerHTML = `
+                    <div class="${catInfo.color} w-12 h-12 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fa-solid ${catInfo.icon} text-xl"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-medium text-gray-800 truncate">${t.description}</h4>
+                        <p class="text-xs text-gray-500 flex items-center gap-1">
+                            <span class="truncate">${catInfo.name}</span>
+                            <span class="mx-1">•</span>
+                            <span class="truncate">${formatDate(t.date)}</span>
+                        </p>
+                    </div>
+                    <div class="text-right shrink-0 relative">
+                        <span class="font-semibold ${amountColor}">${sign}${formatRupiah(t.amount)}</span>
+                        <button onclick="deleteTransaction('${t.id}')" class="absolute top-1/2 -right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:-translate-x-2 text-red-500 hover:text-red-700 bg-red-50 rounded-full w-8 h-8 flex items-center justify-center transition-all focus:outline-none" title="Hapus">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        };
+
+        const updateChartFilterOptions = () => {
+            const filterEl = document.getElementById('chart-year-filter');
+            const currentSelected = filterEl.value;
+            
+            const years = new Set();
+            transactions.forEach(t => {
+                const d = new Date(t.date);
+                if (!isNaN(d)) years.add(d.getFullYear());
+            });
+            
+            const currentYear = new Date().getFullYear();
+            years.add(currentYear);
+            
+            const sortedYears = Array.from(years).sort((a, b) => b - a);
+            
+            filterEl.innerHTML = '<option value="all">Semua Tahun</option>';
+            sortedYears.forEach(year => {
+                const opt = document.createElement('option');
+                opt.value = year;
+                opt.textContent = 'Tahun ' + year;
+                filterEl.appendChild(opt);
+            });
+            
+            if (sortedYears.includes(Number(currentSelected))) {
+                filterEl.value = currentSelected;
+            } else if (currentSelected === 'all') {
+                filterEl.value = 'all';
+            } else {
+                filterEl.value = currentYear;
+            }
+        };
+
+        const renderMonthlyChart = () => {
+            const filterYear = document.getElementById('chart-year-filter').value;
+            const monthlyMap = {};
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+
+            if (filterYear !== 'all') {
+                for (let i = 0; i < 12; i++) {
+                    const monthKey = `${filterYear}-${String(i + 1).padStart(2, '0')}`;
+                    monthlyMap[monthKey] = { label: monthNames[i], income: 0, expense: 0, sortKey: monthKey };
+                }
+            }
+
+            transactions.forEach(t => {
+                const date = new Date(t.date);
+                if (isNaN(date)) return;
+                
+                const year = date.getFullYear();
+                
+                if (filterYear !== 'all' && year.toString() !== filterYear) return;
+
+                const monthKey = `${year}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                const label = filterYear === 'all' ? `${monthNames[date.getMonth()]} ${year}` : monthNames[date.getMonth()];
+
+                if (!monthlyMap[monthKey]) {
+                    monthlyMap[monthKey] = { label, income: 0, expense: 0, sortKey: monthKey };
+                }
+                if (t.type === 'income') {
+                    monthlyMap[monthKey].income += t.amount;
+                } else {
+                    monthlyMap[monthKey].expense += t.amount;
+                }
+            });
+
+            const sortedKeys = Object.keys(monthlyMap).sort();
+            const labels = sortedKeys.map(k => monthlyMap[k].label);
+            const incomeData = sortedKeys.map(k => monthlyMap[k].income);
+            const expenseData = sortedKeys.map(k => monthlyMap[k].expense);
+
+            const ctx = document.getElementById('monthlyChart').getContext('2d');
+            
+            if (financialChartInstance) {
+                financialChartInstance.destroy();
+            }
+
+            financialChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels.length > 0 ? labels : ['Belum Ada Data'],
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: labels.length > 0 ? incomeData : [0],
+                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                            borderRadius: 6,
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: labels.length > 0 ? expenseData : [0],
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderRadius: 6,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatRupiah(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 10
+                                },
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return (value / 1000000) + 'jt';
+                                    } else if (value >= 1000) {
+                                        return (value / 1000) + 'rb';
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        const modal = document.getElementById('transaction-modal');
+        const form = document.getElementById('transaction-form');
+        const categorySelect = document.getElementById('category');
+        const typeRadios = document.querySelectorAll('input[name="type"]');
+
+        const targetModal = document.getElementById('target-modal');
+        const targetForm = document.getElementById('target-form');
+
+        const openTargetModal = () => {
+            document.getElementById('target-input').value = targetBalance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            targetModal.classList.remove('hidden');
+            setTimeout(() => {
+                targetModal.classList.remove('opacity-0', 'pointer-events-none');
+                document.getElementById('target-modal-content').classList.remove('scale-95');
+            }, 10);
+            document.getElementById('target-input').focus();
+        };
+
+        const closeTargetModal = () => {
+            targetModal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('target-modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                targetModal.classList.add('hidden');
+            }, 300);
+        };
+
+        targetForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const rawTarget = document.getElementById('target-input').value.replace(/\./g, '');
+            const newTarget = parseFloat(rawTarget);
+            
+            if (!isNaN(newTarget) && newTarget >= 0) {
+                targetBalance = newTarget;
+                updateSummary();
+                closeTargetModal();
+            }
+        });
+
+        const updateCategoryOptions = () => {
+            const selectedType = document.querySelector('input[name="type"]:checked').value;
+            const options = categories[selectedType];
+            
+            categorySelect.innerHTML = '';
+            options.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                categorySelect.appendChild(option);
+            });
+        };
+
+        const openModal = () => {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                document.getElementById('modal-content').classList.remove('scale-95');
+            }, 10);
+            document.getElementById('amount').focus();
+        };
+
+        const closeModal = () => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                form.reset();
+                updateCategoryOptions();
+            }, 300);
+        };
+
+        const loadDataFromSpreadsheet = async () => {
+            const emptyState = document.getElementById('empty-state');
+            
+            const cachedData = localStorage.getItem('cash_transactions');
+            if (cachedData) {
+                try {
+                    transactions = JSON.parse(cachedData);
+                    updateAll();
+                } catch(e) {}
+            }
+
+            if (transactions.length === 0 && !cachedData) {
+                emptyState.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-4xl mb-3 text-blue-500"></i><p>Memuat data dari Spreadsheet...</p>';
+                emptyState.style.display = 'block';
+            }
+
+            if (SPREADSHEET_WEB_APP_URL !== "") {
+                try {
+                    const response = await fetch(SPREADSHEET_WEB_APP_URL);
+                    const responseText = await response.text();
+                    
+                    let result;
+                    try {
+                        result = JSON.parse(responseText);
+                    } catch (parseErr) {
+                        throw new Error("Gagal membaca respon dari Apps Script. Pastikan deployment sudah benar.");
+                    }
+                    
+                    if (result.status === "success" && result.data) {
+                        transactions = result.data;
+                        localStorage.setItem('cash_transactions', JSON.stringify(transactions));
+                        updateAll();
+                    }
+                } catch (error) {
+                    console.error("Gagal mengambil data:", error);
+                    if(transactions.length === 0) {
+                        emptyState.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-4xl mb-3 text-red-400"></i><p class="text-xs text-red-600 font-medium px-4 mt-2">Gagal memuat:<br>${error.message}</p><button onclick="loadDataFromSpreadsheet()" class="mt-3 text-xs bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition-colors">Coba Lagi</button>`;
+                    }
+                }
+            } else {
+                updateAll();
+            }
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            submitBtn.disabled = true;
+
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const rawAmount = document.getElementById('amount').value.replace(/\./g, '');
+            const amount = parseFloat(rawAmount);
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+
+            if (!amount || !description) {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                return;
+            }
+
+            const newTransaction = {
+                id: generateId(),
+                type,
+                amount,
+                description,
+                category,
+                date: new Date().toISOString()
+            };
+
+            transactions.push(newTransaction);
+            localStorage.setItem('cash_transactions', JSON.stringify(transactions));
+            updateAll(); 
+
+            const income = transactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0);
+            const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+            const balance = income - expense;
+            const catInfo = getCategoryDetails(type, category);
+
+            const payload = {
+                id: newTransaction.id,
+                date: formatDate(newTransaction.date),
+                type: newTransaction.type,
+                amount: newTransaction.amount,
+                description: newTransaction.description,
+                categoryName: catInfo.name,
+                totalIncome: income,
+                totalExpense: expense,
+                totalBalance: balance
+            };
+
+            if (SPREADSHEET_WEB_APP_URL !== "") {
+                const syncIndicator = document.getElementById('sync-status');
+                if (syncIndicator) syncIndicator.classList.remove('hidden');
+                
+                try {
+                    await fetch(SPREADSHEET_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (error) {
+                    console.error("Gagal mengirim data:", error);
+                } finally {
+                    if (syncIndicator) {
+                        setTimeout(() => syncIndicator.classList.add('hidden'), 500); 
+                    }
+                }
+            }
+            
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            closeModal();
+        });
+
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', updateCategoryOptions);
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        targetModal.addEventListener('click', (e) => {
+            if (e.target === targetModal) closeTargetModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!modal.classList.contains('hidden')) closeModal();
+                if (!targetModal.classList.contains('hidden')) closeTargetModal();
+            }
+        });
+
+        window.deleteTransaction = async (id) => {
+            transactions = transactions.filter(t => t.id !== id);
+            localStorage.setItem('cash_transactions', JSON.stringify(transactions));
+            updateAll();
+
+            if (SPREADSHEET_WEB_APP_URL !== "") {
+                const syncIndicator = document.getElementById('sync-status');
+                if (syncIndicator) {
+                    syncIndicator.innerHTML = '<i class="fa-solid fa-trash-can animate-bounce"></i> Menghapus...';
+                    syncIndicator.classList.remove('hidden');
+                }
+                
+                try {
+                    await fetch(SPREADSHEET_WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ action: 'delete', id: id })
+                    });
+                } catch (error) {
+                    console.error("Gagal menghapus di Spreadsheet:", error);
+                } finally {
+                    if (syncIndicator) {
+                        setTimeout(() => {
+                            syncIndicator.classList.add('hidden');
+                            syncIndicator.innerHTML = '<i class="fa-solid fa-cloud-arrow-up animate-bounce"></i> Syncing...';
+                        }, 500); 
+                    }
+                }
+            }
+        };
+
+        const updateAll = () => {
+            updateSummary();
+            renderTransactions();
+            updateChartFilterOptions();
+            if (!document.getElementById('view-chart').classList.contains('hidden')) {
+                renderMonthlyChart();
+            }
+        };
+
+        const formatNumberInput = (inputEl) => {
+            inputEl.addEventListener('input', function(e) {
+                let value = this.value.replace(/[^0-9]/g, '');
+                this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            });
+        };
+
+        formatNumberInput(document.getElementById('amount'));
+        formatNumberInput(document.getElementById('target-input'));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateHeaderDate();
+
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('login-screen').classList.add('hidden');
+            }
+
+            document.getElementById('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = document.getElementById('username').value;
+                const pass = document.getElementById('password').value;
+                const errorMsg = document.getElementById('login-error');
+                
+                if (user === 'Robert' && pass === 'saragih123') {
+                    errorMsg.classList.add('hidden');
+                    const loginScreen = document.getElementById('login-screen');
+                    loginScreen.classList.add('opacity-0');
+                    setTimeout(() => {
+                        loginScreen.classList.add('hidden');
+                    }, 500);
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                } else {
+                    errorMsg.classList.remove('hidden');
+                }
+            });
+
+            updateCategoryOptions();
+            loadDataFromSpreadsheet();
+        });
+    </script>
+</body>
+</html>
