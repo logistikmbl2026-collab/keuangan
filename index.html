@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kas Robert Yosua Saragih</title>
+    <title>Tabungan Deposit Koperasi Tunas Jaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js untuk Grafik Bulanan -->
@@ -12,18 +12,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #f0f4f8;
         }
         .transaction-list::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
         .transaction-list::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-            border-radius: 8px;
+            background: transparent; 
         }
         .transaction-list::-webkit-scrollbar-thumb {
             background: #cbd5e1; 
-            border-radius: 8px;
+            border-radius: 4px;
         }
         .transaction-list::-webkit-scrollbar-thumb:hover {
             background: #94a3b8; 
@@ -41,230 +40,397 @@
         .animate-marquee:hover {
             animation-play-state: paused;
         }
+
+        /* BRIMO Custom Styles */
+        .brimo-gradient {
+            background: linear-gradient(135deg, #00529C 0%, #0077C8 100%);
+        }
+        .brimo-text-primary {
+            color: #00529C;
+        }
+        .brimo-bg-primary {
+            background-color: #00529C;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .bottom-nav-shadow {
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
-<body class="text-gray-800 h-screen flex justify-center items-center p-4 relative overflow-hidden">
+<body class="text-gray-800 h-screen flex justify-center items-center md:p-4 relative overflow-hidden bg-gray-100">
 
     <!-- Login Screen -->
-    <div id="login-screen" class="fixed inset-0 bg-slate-900/95 backdrop-blur-sm flex justify-center items-center z-[100] transition-opacity duration-500 px-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm transform transition-all">
-            <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                    <i class="fa-solid fa-lock text-4xl text-blue-600"></i>
+    <div id="login-screen" class="fixed inset-0 bg-white flex justify-center items-center z-[100] transition-opacity duration-500">
+        <div class="w-full max-w-md h-full flex flex-col justify-between p-8">
+            <div class="flex-1 flex flex-col justify-center">
+                <div class="text-center mb-10">
+                    <div class="w-24 h-24 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-blue-100">
+                        <i class="fa-solid fa-building-columns text-5xl brimo-text-primary"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-1">Kas Robert Yosua Saragih</h2>
+                    <p class="text-sm text-gray-500">Selamat datang kembali</p>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800">Kas Robert Yosua Saragih</h2>
-                <p class="text-sm text-gray-500 mt-2">Silakan masuk untuk melanjutkan</p>
+                
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <div class="relative">
+                            <input type="text" id="username" class="w-full border-b-2 border-gray-300 py-3 text-gray-900 focus:outline-none focus:border-[#00529C] transition-colors placeholder-gray-400 bg-transparent" placeholder="Username" required autocomplete="off">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="relative">
+                            <input type="password" id="password" class="w-full border-b-2 border-gray-300 py-3 text-gray-900 focus:outline-none focus:border-[#00529C] transition-colors placeholder-gray-400 bg-transparent" placeholder="Password" required>
+                        </div>
+                    </div>
+
+                    <p id="login-error" class="text-red-500 text-sm text-center hidden font-medium mt-2">Username atau Password salah!</p>
+                    
+                    <button type="submit" class="w-full text-white brimo-bg-primary hover:bg-blue-800 font-semibold rounded-full text-md px-5 py-3.5 text-center transition-all shadow-md mt-8">
+                        Login
+                    </button>
+                </form>
             </div>
             
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Username</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-user text-gray-400"></i>
-                        </div>
-                        <input type="text" id="username" class="pl-10 w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-shadow" placeholder="Masukkan username" required autocomplete="off">
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Password</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-key text-gray-400"></i>
-                        </div>
-                        <input type="password" id="password" class="pl-10 w-full p-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-shadow" placeholder="••••••••" required>
-                    </div>
-                </div>
-
-                <p id="login-error" class="text-red-500 text-sm text-center hidden font-medium bg-red-50 p-2 rounded-lg"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Username atau Password salah!</p>
-                
-                <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-md px-5 py-3.5 text-center transition-all shadow-md hover:shadow-lg">
-                    Masuk Sekarang
-                </button>
-            </form>
+            <div class="text-center pb-4">
+                <p class="text-xs text-gray-400">Versi 1.0.0</p>
+            </div>
         </div>
     </div>
 
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden flex flex-col h-full max-h-[850px]">
+    <div class="bg-white w-full max-w-md md:rounded-3xl shadow-xl overflow-hidden flex flex-col h-full md:h-[850px] relative">
         
-        <!-- Header / Summary Section -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white shadow-md relative">
-            
-            <!-- Sync Status Indicator (Moved to top-left) -->
-            <div id="sync-status" class="absolute top-4 left-4 text-[10px] bg-white/20 px-2.5 py-1 rounded-full hidden flex items-center gap-1 backdrop-blur-sm shadow-sm border border-white/10 z-10">
-                <i class="fa-solid fa-cloud-arrow-up animate-bounce"></i> Syncing...
+        <!-- Header Banner Section -->
+        <div class="brimo-gradient p-5 text-white shadow-md relative pb-12 rounded-b-[2rem] shrink-0">
+            <!-- Top Bar -->
+            <div class="flex justify-between items-center mb-4">
+                <div id="sync-status" class="text-[10px] bg-white/20 px-3 py-1 rounded-full hidden flex items-center gap-1 backdrop-blur-sm border border-white/20">
+                    <i class="fa-solid fa-cloud-arrow-up animate-pulse"></i> Syncing...
+                </div>
+                <div id="sync-status-spacer" class="w-20"></div>
+
+                <div id="current-date-display" class="text-[11px] bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20 flex items-center gap-1.5 font-medium">
+                    <i class="fa-regular fa-calendar"></i> <span id="date-text">--</span>
+                </div>
             </div>
 
-            <!-- Current Date Display (Top Right) -->
-            <div id="current-date-display" class="absolute top-4 right-4 text-[11px] bg-white/15 px-2.5 py-1 rounded-full backdrop-blur-sm shadow-sm border border-white/10 flex items-center gap-1.5 font-medium text-blue-100">
-                <i class="fa-regular fa-calendar-days"></i> <span id="date-text">--</span>
-            </div>
-
-            <h1 class="text-xl font-semibold mb-4 text-center pt-2">Buku Kas Robert Yosua Saragih</h1>
-
-            <div class="flex flex-col items-center mb-6">
-                <span class="text-blue-100 text-sm font-medium">Total Saldo</span>
-                <h2 id="total-balance" class="text-4xl font-bold tracking-tight">Rp 0</h2>
+            <div class="flex flex-col mb-2">
+                <span class="text-white/80 text-xs font-medium mb-1">Total Saldo Aktif</span>
+                <div class="flex items-center gap-3">
+                    <h2 id="total-balance" class="text-3xl font-bold tracking-tight">Rp 0</h2>
+                    <button id="toggle-balance" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fa-regular fa-eye-slash text-sm"></i>
+                    </button>
+                </div>
                 
                 <!-- Target Progress Widget -->
-                <div class="w-full max-w-xs mt-4 bg-white/10 rounded-xl p-3 border border-white/20 shadow-inner">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs text-blue-100">Target: 
-                            <span id="target-display" class="font-semibold text-white cursor-pointer hover:text-blue-200 transition-colors" onclick="openTargetModal()" title="Ubah Target">
+                <div class="w-full mt-3 bg-white/10 rounded-xl p-3 border border-white/10">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-xs text-white/90">Target: 
+                            <span id="target-display" class="font-semibold text-white cursor-pointer hover:text-blue-100 transition-colors" onclick="openTargetModal()" title="Ubah Target">
                                 Rp 0 <i class="fa-solid fa-pen text-[10px] ml-1"></i>
                             </span>
                         </span>
-                        <span id="target-status" class="text-xs font-semibold text-white">Kurang Rp 0</span>
+                        <span id="target-status" class="text-xs font-medium text-white/90">Kurang Rp 0</span>
                     </div>
-                    <div class="w-full bg-black/20 rounded-full h-2">
-                        <div id="target-progress" class="bg-yellow-400 h-2 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                    <div class="w-full bg-white/20 rounded-full h-1.5">
+                        <div id="target-progress" class="bg-white h-1.5 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto relative pb-20">
             
-            <div class="flex justify-between gap-4">
-                <!-- Income Card -->
-                <div class="bg-white/20 rounded-xl p-3 flex-1 flex flex-col items-center backdrop-blur-sm border border-white/10 shadow-inner">
-                    <div class="bg-green-400 text-white rounded-full w-8 h-8 flex items-center justify-center mb-1">
-                        <i class="fa-solid fa-arrow-down"></i>
+            <!-- PAGE 1: HOME -->
+            <div id="page-home" class="p-5 space-y-5">
+                <!-- Floating Summary Cards -->
+                <div class="flex justify-between gap-3">
+                    <div class="bg-white rounded-2xl p-4 flex-1 flex flex-col card-shadow border border-gray-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-down text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 font-medium">Pemasukan</span>
+                        </div>
+                        <span id="home-income" class="font-bold text-gray-800 text-sm">Rp 0</span>
                     </div>
-                    <span class="text-xs text-blue-100 mb-1">Pemasukan</span>
-                    <span id="total-income" class="font-semibold text-sm">Rp 0</span>
+                    
+                    <div class="bg-white rounded-2xl p-4 flex-1 flex flex-col card-shadow border border-gray-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-up text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 font-medium">Pengeluaran</span>
+                        </div>
+                        <span id="home-expense" class="font-bold text-gray-800 text-sm">Rp 0</span>
+                    </div>
                 </div>
-                
-                <!-- Expense Card -->
-                <div class="bg-white/20 rounded-xl p-3 flex-1 flex flex-col items-center backdrop-blur-sm border border-white/10 shadow-inner">
-                    <div class="bg-red-400 text-white rounded-full w-8 h-8 flex items-center justify-center mb-1">
-                        <i class="fa-solid fa-arrow-up"></i>
+
+                <!-- Quick Overview Widget -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-100 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm mb-0.5">Koperasi Tunas Jaya</h4>
+                        <p class="text-xs text-gray-500">Tabungan Deposit Digital Active</p>
                     </div>
-                    <span class="text-xs text-blue-100 mb-1">Pengeluaran</span>
-                    <span id="total-expense" class="font-semibold text-sm">Rp 0</span>
+                    <div class="bg-white p-2.5 rounded-xl text-[#00529C] shadow-sm">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions Summary -->
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-gray-800 text-sm">Transaksi Terakhir</h3>
+                        <button onclick="switchMainPage('aktivitas')" class="text-xs brimo-text-primary font-semibold hover:underline">Lihat Semua</button>
+                    </div>
+                    <div id="home-recent-list" class="space-y-3">
+                        <p class="text-center text-xs text-gray-400 py-4">Belum ada transaksi</p>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Add Button -->
-            <button onclick="openModal()" class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-400 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 border-4 border-white focus:outline-none focus:ring-2 focus:ring-blue-300 z-10">
+
+            <!-- PAGE 2: AKTIVITAS (Mutasi & Grafik) -->
+            <div id="page-aktivitas" class="p-5 space-y-4 hidden flex flex-col h-full">
+                <div class="flex gap-6 bg-white border-b border-gray-100 pb-2">
+                    <button onclick="switchTab('history')" id="tab-history" class="pb-2 text-sm font-semibold brimo-text-primary border-b-2 border-[#00529C] transition-colors">
+                        Mutasi
+                    </button>
+                    <button onclick="switchTab('chart')" id="tab-chart" class="pb-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors">
+                        Analisis
+                    </button>
+                </div>
+
+                <!-- Tab 1: Mutasi List -->
+                <div id="view-history" class="flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-gray-800 text-sm">Riwayat Mutasi</h3>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md font-medium" id="transaction-count">0 mutasi</span>
+                    </div>
+                    
+                    <div id="transaction-list" class="transaction-list flex-1 overflow-y-auto space-y-3 pr-1 pb-4">
+                        <div class="text-center text-gray-400 text-sm mt-10" id="empty-state">
+                            <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 brimo-text-primary"></i>
+                            <p>Memuat data mutasi...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Monthly Chart -->
+                <div id="view-chart" class="flex-1 flex flex-col hidden pb-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-gray-800 text-sm">Arus Kas Bulanan</h3>
+                        <select id="chart-year-filter" onchange="renderMonthlyChart()" class="text-xs bg-gray-50 border-none text-gray-700 rounded-lg focus:ring-0 block p-1.5 cursor-pointer font-medium border border-gray-200">
+                            <option value="all">Semua Tahun</option>
+                        </select>
+                    </div>
+                    <div class="bg-white p-2 rounded-2xl flex-1 flex flex-col justify-center items-center relative min-h-[280px]">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: DOMPET -->
+            <div id="page-dompet" class="p-5 space-y-4 hidden">
+                <div class="brimo-gradient rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-xs text-white/80 font-medium">Tabungan Deposit</p>
+                            <h3 class="text-lg font-bold">Koperasi Tunas Jaya</h3>
+                        </div>
+                        <i class="fa-solid fa-wallet text-3xl text-white/30"></i>
+                    </div>
+
+                    <div class="space-y-1 mb-6">
+                        <p class="text-xs text-white/70">Saldo Akhir Total</p>
+                        <h2 id="dompet-total-balance" class="text-3xl font-bold tracking-tight">Rp 0</h2>
+                    </div>
+
+                    <div class="pt-3 border-t border-white/20 flex justify-between text-xs text-white/90">
+                        <span>No. Rekening Deposit:</span>
+                        <span class="font-mono font-semibold">8802-9910-1996</span>
+                    </div>
+                </div>
+
+                <!-- Breakdown Info -->
+                <div class="bg-white rounded-2xl p-4 border border-gray-100 card-shadow space-y-3">
+                    <h4 class="font-bold text-gray-800 text-sm">Ringkasan Saldo</h4>
+                    
+                    <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span class="text-xs text-gray-500">Total Pemasukan</span>
+                        <span id="dompet-income" class="text-xs font-bold text-green-600">Rp 0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span class="text-xs text-gray-500">Total Pengeluaran</span>
+                        <span id="dompet-expense" class="text-xs font-bold text-red-600">Rp 0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-xs font-bold text-gray-700">Saldo Bersih (Net)</span>
+                        <span id="dompet-net-balance" class="text-sm font-bold brimo-text-primary">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 4: AKUN -->
+            <div id="page-akun" class="p-5 space-y-4 hidden">
+                <!-- User Profile Header -->
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 card-shadow text-center relative">
+                    <div class="w-20 h-20 brimo-gradient text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-3 shadow-md border-4 border-blue-50">
+                        RYS
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Robert Yosua Saragih</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Pemilik Tabungan Deposit</p>
+                </div>
+
+                <!-- Personal Information List -->
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 card-shadow space-y-4">
+                    <h4 class="font-bold text-gray-800 text-sm border-b pb-2 border-gray-100">Informasi Pengguna</h4>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <span class="text-gray-400 block mb-0.5">Nama Lengkap</span>
+                            <span class="font-semibold text-gray-800 text-sm">Robert Yosua Saragih</span>
+                        </div>
+
+                        <div>
+                            <span class="text-gray-400 block mb-0.5">Tempat, Tanggal Lahir</span>
+                            <span class="font-semibold text-gray-800 text-sm">Kuaro, 10 February 1996</span>
+                        </div>
+
+                        <div>
+                            <span class="text-gray-400 block mb-0.5">Agama</span>
+                            <span class="font-semibold text-gray-800 text-sm">Kristen Protestan</span>
+                        </div>
+
+                        <div>
+                            <span class="text-gray-400 block mb-0.5">No. Telepon</span>
+                            <span class="font-semibold text-gray-800 text-sm">08115522724</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logout Button -->
+                <button onclick="handleLogout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-2xl text-sm py-3.5 transition-colors flex items-center justify-center gap-2 border border-red-100">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Floating Add Button -->
+        <div class="absolute bottom-6 left-0 w-full flex justify-center z-40 pointer-events-none">
+            <button onclick="openModal()" class="brimo-gradient text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_20px_rgba(0,82,156,0.4)] transition-transform hover:scale-105 active:scale-95 border-4 border-white pointer-events-auto">
                 <i class="fa-solid fa-plus text-xl"></i>
             </button>
         </div>
 
-        <!-- Menu Navigation Tabs -->
-        <div class="flex border-b border-gray-200 bg-white px-6 pt-4 gap-4">
-            <button onclick="switchTab('history')" id="tab-history" class="pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2">
-                <i class="fa-solid fa-list-check"></i> Riwayat
+        <!-- Bottom Navigation Bar -->
+        <div class="absolute bottom-0 left-0 w-full bg-white border-t border-gray-100 h-16 flex justify-between items-center px-6 z-30 bottom-nav-shadow">
+            <button onclick="switchMainPage('home')" id="nav-btn-home" class="flex flex-col items-center text-[#00529C] transition-colors">
+                <i class="fa-solid fa-house text-lg mb-1"></i>
+                <span class="text-[10px] font-semibold">Home</span>
             </button>
-            <button onclick="switchTab('chart')" id="tab-chart" class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2">
-                <i class="fa-solid fa-chart-column"></i> Grafik Bulanan
+
+            <button onclick="switchMainPage('aktivitas')" id="nav-btn-aktivitas" class="flex flex-col items-center text-gray-400 mr-6 transition-colors">
+                <i class="fa-solid fa-clock-rotate-left text-lg mb-1"></i>
+                <span class="text-[10px] font-medium">Aktivitas</span>
+            </button>
+
+            <button onclick="switchMainPage('dompet')" id="nav-btn-dompet" class="flex flex-col items-center text-gray-400 ml-6 transition-colors">
+                <i class="fa-solid fa-wallet text-lg mb-1"></i>
+                <span class="text-[10px] font-medium">Dompet</span>
+            </button>
+
+            <button onclick="switchMainPage('akun')" id="nav-btn-akun" class="flex flex-col items-center text-gray-400 transition-colors">
+                <i class="fa-solid fa-user text-lg mb-1"></i>
+                <span class="text-[10px] font-medium">Akun</span>
             </button>
         </div>
 
-        <!-- Main Content Area -->
-        <div class="flex-1 p-6 pt-4 overflow-hidden flex flex-col bg-gray-50 relative">
-            
-            <!-- Tab 1: Riwayat Transaksi -->
-            <div id="view-history" class="flex-1 flex flex-col overflow-hidden">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-gray-700 text-sm">Daftar Transaksi</h3>
-                    <span class="text-xs text-gray-400" id="transaction-count">0 transaksi</span>
-                </div>
-                
-                <!-- List Container -->
-                <div id="transaction-list" class="transaction-list flex-1 overflow-y-auto space-y-3 pb-4">
-                    <div class="text-center text-gray-400 text-sm mt-10" id="empty-state">
-                        <i class="fa-solid fa-spinner fa-spin text-4xl mb-3 text-blue-500"></i>
-                        <p>Memuat data dari Spreadsheet...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 2: Grafik Bulanan -->
-            <div id="view-chart" class="flex-1 flex flex-col overflow-y-auto hidden pb-4">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-semibold text-gray-700 text-sm">Analisis Bulanan</h3>
-                    <select id="chart-year-filter" onchange="renderMonthlyChart()" class="text-xs bg-white border border-gray-200 text-gray-700 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 shadow-sm outline-none cursor-pointer font-medium">
-                        <option value="all">Semua Tahun</option>
-                    </select>
-                </div>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-center items-center relative min-h-[300px]">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
-            </div>
-
-        </div>
     </div>
 
-    <!-- Running Text (Marquee) Bottom Bar -->
-    <div class="fixed bottom-0 left-0 w-full bg-slate-800 text-blue-100 overflow-hidden py-2.5 z-40 shadow-lg border-t border-slate-700">
-        <div class="animate-marquee whitespace-nowrap text-sm font-medium tracking-wide flex gap-12">
+    <!-- Running Text (Marquee) -->
+    <div class="fixed top-0 left-0 w-full brimo-bg-primary text-white overflow-hidden py-2 z-[90] hidden md:block">
+        <div class="animate-marquee whitespace-nowrap text-xs font-medium tracking-wide flex gap-12">
             <span>"Hemat bukan berarti hidup menderita, tapi memilih membeli ketenangan pikiran daripada tumpukan barang rongsokan di kemudian hari."</span>
-            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span class="text-blue-300 text-[10px] mt-0.5"><i class="fa-solid fa-circle"></i></span>
             <span>"Dana darurat bukan sekadar saldo tabungan, melainkan pelindung martabat agar tidak perlu memohon atau berutang saat krisis datang."</span>
-            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span class="text-blue-300 text-[10px] mt-0.5"><i class="fa-solid fa-circle"></i></span>
             <span>"Kemewahan tertinggi adalah memiliki cukup tabungan untuk punya pilihan berkata 'tidak' pada situasi atau pekerjaan yang tidak kamu sukai."</span>
-            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span class="text-blue-300 text-[10px] mt-0.5"><i class="fa-solid fa-circle"></i></span>
             <span>"Jangan gadaikan lelah kerja keras berminggu-minggu hanya demi sensasi taruhan beberapa detik di layar ponsel."</span>
-            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span class="text-blue-300 text-[10px] mt-0.5"><i class="fa-solid fa-circle"></i></span>
             <span>"Gaji didapat dari menukar waktu, tenaga, dan pikiran yang nyata. Membakarnya untuk hal sia-sia sama saja meremehkan harga dirimu sendiri."</span>
-            <span class="text-blue-500 text-xs mt-0.5"><i class="fa-solid fa-circle"></i></span>
+            <span class="text-blue-300 text-[10px] mt-0.5"><i class="fa-solid fa-circle"></i></span>
             <span>"Kaya itu proses akumulasi yang lambat dan disiplin, bukan sulap kilat lewat tebak angka atau putaran mesin."</span>
         </div>
     </div>
 
     <!-- Add Transaction Modal -->
-    <div id="transaction-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
-        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content">
+    <div id="transaction-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-end md:items-center z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+        <div class="bg-white w-full max-w-md rounded-t-3xl md:rounded-3xl overflow-hidden shadow-2xl transform translate-y-full md:translate-y-8 md:scale-95 transition-transform duration-300" id="modal-content">
             
-            <div class="flex justify-between items-center p-5 border-b">
-                <h3 class="font-semibold text-lg text-gray-800">Tambah Transaksi</h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+            <div class="flex justify-between items-center p-5 pb-3">
+                <h3 class="font-bold text-lg text-gray-800">Tambah Transaksi</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="transaction-form" class="p-5 space-y-4">
-                <div class="flex p-1 bg-gray-100 rounded-lg">
-                    <label class="flex-1 text-center cursor-pointer">
-                        <input type="radio" name="type" value="income" class="peer sr-only" checked>
-                        <div class="py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-green-600 font-medium text-sm text-gray-500 transition-all">
+            <form id="transaction-form" class="p-5 pt-0 space-y-5">
+                <div class="flex p-1 bg-gray-100 rounded-xl relative">
+                    <div id="radio-indicator" class="absolute w-1/2 h-[calc(100%-8px)] bg-white rounded-lg shadow-sm top-1 left-1 transition-all duration-300"></div>
+                    <label class="flex-1 text-center cursor-pointer z-10">
+                        <input type="radio" name="type" value="income" class="peer sr-only" checked onchange="updateRadioIndicator(this)">
+                        <div class="py-2.5 font-semibold text-sm peer-checked:text-[#00529C] text-gray-500 transition-colors">
                             Pemasukan
                         </div>
                     </label>
-                    <label class="flex-1 text-center cursor-pointer">
-                        <input type="radio" name="type" value="expense" class="peer sr-only">
-                        <div class="py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-red-500 font-medium text-sm text-gray-500 transition-all">
+                    <label class="flex-1 text-center cursor-pointer z-10">
+                        <input type="radio" name="type" value="expense" class="peer sr-only" onchange="updateRadioIndicator(this)">
+                        <div class="py-2.5 font-semibold text-sm peer-checked:text-[#00529C] text-gray-500 transition-colors">
                             Pengeluaran
                         </div>
                     </label>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah (Rp)</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">Rp</span>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Nominal (Rp)</label>
+                    <div class="relative border-b-2 border-gray-200 focus-within:border-[#00529C] transition-colors pb-1">
+                        <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none top-[-4px]">
+                            <span class="text-gray-800 font-bold text-xl">Rp</span>
                         </div>
                         <input type="text" id="amount" required inputmode="numeric"
-                            class="pl-10 w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block text-lg font-semibold" 
+                            class="pl-8 w-full bg-transparent text-gray-900 focus:outline-none block text-3xl font-bold placeholder-gray-300" 
                             placeholder="0">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Keterangan</label>
                     <input type="text" id="description" required
-                        class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block" 
-                        placeholder="Cth: Gaji, Makan Siang, Bensin...">
+                        class="w-full p-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-1 focus:ring-[#00529C] focus:border-[#00529C] block outline-none transition-shadow text-sm" 
+                        placeholder="Contoh: Gaji bulan ini...">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                    <select id="category" class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block">
-                    </select>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Kategori</label>
+                    <div class="relative">
+                        <select id="category" class="w-full p-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-1 focus:ring-[#00529C] focus:border-[#00529C] block outline-none transition-shadow text-sm appearance-none">
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors">
+                <div class="pt-4 pb-4 md:pb-0">
+                    <button type="submit" class="w-full text-white brimo-gradient font-bold rounded-full text-md px-5 py-3.5 text-center transition-all shadow-md active:scale-[0.98]">
                         Simpan Transaksi
                     </button>
                 </div>
@@ -272,32 +438,31 @@
         </div>
     </div>
 
-    <!-- Edit Target Modal -->
-    <div id="target-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
-        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="target-modal-content">
-            
-            <div class="flex justify-between items-center p-5 border-b">
-                <h3 class="font-semibold text-lg text-gray-800">Atur Target Saldo</h3>
-                <button onclick="closeTargetModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+    <!-- Target Modal -->
+    <div id="target-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+        <div class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="target-modal-content">
+            <div class="flex justify-between items-center p-5 pb-3">
+                <h3 class="font-bold text-lg text-gray-800">Atur Target Saldo</h3>
+                <button onclick="closeTargetModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="target-form" class="p-5 space-y-4">
+            <form id="target-form" class="p-5 space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Target Saldo (Rp)</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">Rp</span>
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Target Nominal (Rp)</label>
+                    <div class="relative border-b-2 border-gray-200 focus-within:border-[#00529C] transition-colors pb-1">
+                        <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none top-[-4px]">
+                            <span class="text-gray-800 font-bold text-xl">Rp</span>
                         </div>
                         <input type="text" id="target-input" required inputmode="numeric"
-                            class="pl-10 w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block text-lg font-semibold" 
-                            placeholder="Contoh: 10.000.000">
+                            class="pl-8 w-full bg-transparent text-gray-900 focus:outline-none block text-3xl font-bold placeholder-gray-300" 
+                            placeholder="0">
                     </div>
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition-colors">
+                    <button type="submit" class="w-full text-white brimo-bg-primary hover:bg-blue-800 font-bold rounded-full text-md px-5 py-3.5 text-center transition-all shadow-md">
                         Simpan Target
                     </button>
                 </div>
@@ -307,9 +472,10 @@
 
     <script>
         let transactions = [];
-        let targetBalance = 10000000;
+        let targetBalance = parseInt(localStorage.getItem('target_balance')) || 10000000;
         let financialChartInstance = null;
-        
+        let isBalanceHidden = false;
+        let activeMainPage = 'home';
         const SPREADSHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzkZSBoIxRB8treTJxslQW58JftVO6z6SE7OQyuAoCsYnnOxZKg45YUlxnTAkIOs1x8/exec"; 
 
         const categories = {
@@ -339,7 +505,17 @@
         };
 
         const formatRupiah = (number) => {
+            if (isBalanceHidden) return "Rp ••••••••";
             return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
+        };
+        
+        const formatRupiahValueOnly = (number) => {
+             return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
@@ -348,14 +524,39 @@
         };
 
         const formatDate = (dateString) => {
-            const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' };
-            return new Date(dateString).toLocaleDateString('id-ID', options);
+            const date = new Date(dateString);
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute:'2-digit' };
+            return `${date.toLocaleDateString('id-ID', options)} • ${date.toLocaleTimeString('id-ID', timeOptions)}`;
         };
 
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
         const getCategoryDetails = (type, categoryId) => {
             return categories[type].find(c => c.id === categoryId) || categories[type][categories[type].length - 1];
+        };
+
+        const switchMainPage = (pageName) => {
+            activeMainPage = pageName;
+            
+            const pages = ['home', 'aktivitas', 'dompet', 'akun'];
+            pages.forEach(p => {
+                const pageEl = document.getElementById(`page-${p}`);
+                const btnEl = document.getElementById(`nav-btn-${p}`);
+                if (p === pageName) {
+                    pageEl.classList.remove('hidden');
+                    btnEl.className = 'flex flex-col items-center text-[#00529C] transition-colors font-semibold';
+                } else {
+                    pageEl.classList.add('hidden');
+                    btnEl.className = 'flex flex-col items-center text-gray-400 transition-colors font-medium';
+                }
+            });
+
+            if (pageName === 'aktivitas') {
+                if (!document.getElementById('view-chart').classList.contains('hidden')) {
+                    renderMonthlyChart();
+                }
+            }
         };
 
         const switchTab = (tabName) => {
@@ -365,13 +566,13 @@
             const viewChart = document.getElementById('view-chart');
 
             if (tabName === 'history') {
-                tabHistory.className = "pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
-                tabChart.className = "pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2";
+                tabHistory.className = "pb-2 text-sm font-semibold brimo-text-primary border-b-2 border-[#00529C] transition-colors";
+                tabChart.className = "pb-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors";
                 viewHistory.classList.remove('hidden');
                 viewChart.classList.add('hidden');
             } else {
-                tabChart.className = "pb-3 text-sm font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors flex items-center gap-2";
-                tabHistory.className = "pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition-colors flex items-center gap-2";
+                tabChart.className = "pb-2 text-sm font-semibold brimo-text-primary border-b-2 border-[#00529C] transition-colors";
+                tabHistory.className = "pb-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors";
                 viewChart.classList.remove('hidden');
                 viewHistory.classList.add('hidden');
                 renderMonthlyChart();
@@ -383,10 +584,19 @@
             const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
             const balance = income - expense;
 
-            document.getElementById('total-income').textContent = formatRupiah(income);
-            document.getElementById('total-expense').textContent = formatRupiah(expense);
+            // Global Header
             document.getElementById('total-balance').textContent = formatRupiah(balance);
             
+            // Home View
+            document.getElementById('home-income').textContent = formatRupiah(income);
+            document.getElementById('home-expense').textContent = formatRupiah(expense);
+
+            // Dompet View
+            document.getElementById('dompet-total-balance').textContent = formatRupiah(balance);
+            document.getElementById('dompet-income').textContent = formatRupiahValueOnly(income);
+            document.getElementById('dompet-expense').textContent = formatRupiahValueOnly(expense);
+            document.getElementById('dompet-net-balance').textContent = formatRupiah(balance);
+
             const targetDisplay = document.getElementById('target-display');
             const targetStatus = document.getElementById('target-status');
             const targetProgress = document.getElementById('target-progress');
@@ -397,39 +607,27 @@
             if (targetBalance > 0) {
                 if (balance <= 0) {
                     progressPercentage = 0;
-                    targetStatus.textContent = `Kurang ${formatRupiah(targetBalance)}`;
-                    targetStatus.className = "text-xs font-semibold text-yellow-300";
+                    targetStatus.textContent = isBalanceHidden ? "Kurang Rp •••" : `Kurang ${formatRupiahValueOnly(targetBalance)}`;
+                    targetStatus.className = "text-xs font-medium text-white/90";
                 } else if (balance < targetBalance) {
                     progressPercentage = (balance / targetBalance) * 100;
                     const shortfall = targetBalance - balance;
-                    targetStatus.textContent = `Kurang ${formatRupiah(shortfall)}`;
-                    targetStatus.className = "text-xs font-semibold text-yellow-300";
-                    targetProgress.classList.remove('bg-green-400');
-                    targetProgress.classList.add('bg-yellow-400');
+                    targetStatus.textContent = isBalanceHidden ? "Kurang Rp •••" : `Kurang ${formatRupiahValueOnly(shortfall)}`;
+                    targetStatus.className = "text-xs font-medium text-white/90";
                 } else {
                     progressPercentage = 100;
                     targetStatus.textContent = "Target Tercapai! 🎉";
-                    targetStatus.className = "text-xs font-semibold text-green-300";
-                    targetProgress.classList.remove('bg-yellow-400');
-                    targetProgress.classList.add('bg-green-400');
+                    targetStatus.className = "text-xs font-bold text-[#F9E26F]";
                 }
             } else {
                 targetStatus.textContent = "Set Target Anda";
-                targetStatus.className = "text-xs font-semibold text-white";
+                targetStatus.className = "text-xs font-medium text-white/90";
             }
             
             targetProgress.style.width = `${Math.min(progressPercentage, 100)}%`;
+            document.getElementById('transaction-count').textContent = `${transactions.length} mutasi`;
 
-            const balanceEl = document.getElementById('total-balance');
-            if (balance < 0) {
-                balanceEl.classList.add('text-red-300');
-                balanceEl.classList.remove('text-white');
-            } else {
-                balanceEl.classList.remove('text-red-300');
-                balanceEl.classList.add('text-white');
-            }
-            
-            document.getElementById('transaction-count').textContent = `${transactions.length} transaksi`;
+            renderHomeRecentTransactions();
         };
 
         const renderTransactions = () => {
@@ -444,16 +642,17 @@
 
             if (transactions.length === 0) {
                 emptyState.innerHTML = `
-                    <i class="fa-solid fa-receipt text-4xl mb-3 text-gray-300"></i>
-                    <p>Belum ada transaksi.</p>
-                    <p class="text-xs mt-1">Klik tombol + untuk menambah data.</p>
+                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-receipt text-2xl text-gray-300"></i>
+                    </div>
+                    <p class="text-gray-500 font-medium">Belum ada transaksi</p>
+                    <p class="text-xs mt-1 text-gray-400">Transaksi yang kamu buat akan muncul di sini.</p>
                 `;
                 emptyState.style.display = 'block';
                 return;
             }
 
             emptyState.style.display = 'none';
-
             const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
 
             sortedTransactions.forEach(t => {
@@ -463,27 +662,60 @@
                 const amountColor = isIncome ? 'text-green-600' : 'text-gray-800';
 
                 const item = document.createElement('div');
-                item.className = 'bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow group';
+                item.className = 'bg-white p-3.5 rounded-2xl border border-gray-100 flex items-center gap-3 hover:bg-gray-50 transition-colors group relative shadow-sm';
                 item.innerHTML = `
-                    <div class="${catInfo.color} w-12 h-12 rounded-lg flex items-center justify-center shrink-0">
-                        <i class="fa-solid ${catInfo.icon} text-xl"></i>
+                    <div class="${catInfo.color.replace('100', '50')} w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
+                        <i class="fa-solid ${catInfo.icon} text-lg"></i>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-medium text-gray-800 truncate">${t.description}</h4>
-                        <p class="text-xs text-gray-500 flex items-center gap-1">
-                            <span class="truncate">${catInfo.name}</span>
-                            <span class="mx-1">•</span>
-                            <span class="truncate">${formatDate(t.date)}</span>
-                        </p>
+                    <div class="flex-1 min-w-0 py-0.5">
+                        <h4 class="font-bold text-gray-800 text-xs truncate">${t.description}</h4>
+                        <p class="text-[10px] text-gray-500 mt-0.5">${formatDate(t.date)}</p>
                     </div>
-                    <div class="text-right shrink-0 relative">
-                        <span class="font-semibold ${amountColor}">${sign}${formatRupiah(t.amount)}</span>
-                        <button onclick="deleteTransaction('${t.id}')" class="absolute top-1/2 -right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:-translate-x-2 text-red-500 hover:text-red-700 bg-red-50 rounded-full w-8 h-8 flex items-center justify-center transition-all focus:outline-none" title="Hapus">
-                            <i class="fa-solid fa-trash-can text-sm"></i>
+                    <div class="text-right shrink-0">
+                        <span class="font-bold ${amountColor} text-xs">${sign}${formatRupiah(t.amount)}</span>
+                        <p class="text-[10px] text-gray-400 mt-0.5">${catInfo.name}</p>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white via-white to-transparent opacity-0 group-hover:opacity-100 flex items-center justify-end pr-3 transition-opacity pointer-events-none group-hover:pointer-events-auto rounded-r-2xl">
+                         <button onclick="deleteTransaction('${t.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-full w-7 h-7 flex items-center justify-center transition-colors focus:outline-none shadow-sm" title="Hapus">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
                     </div>
                 `;
                 listEl.appendChild(item);
+            });
+        };
+
+        const renderHomeRecentTransactions = () => {
+            const container = document.getElementById('home-recent-list');
+            if (transactions.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-400 py-4">Belum ada transaksi</p>`;
+                return;
+            }
+
+            const recent = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+            container.innerHTML = '';
+
+            recent.forEach(t => {
+                const catInfo = getCategoryDetails(t.type, t.category);
+                const isIncome = t.type === 'income';
+                const sign = isIncome ? '+' : '-';
+                const amountColor = isIncome ? 'text-green-600' : 'text-gray-800';
+
+                const item = document.createElement('div');
+                item.className = 'bg-white p-3 rounded-2xl border border-gray-100 flex items-center gap-3 shadow-sm';
+                item.innerHTML = `
+                    <div class="${catInfo.color.replace('100', '50')} w-9 h-9 rounded-xl flex items-center justify-center shrink-0">
+                        <i class="fa-solid ${catInfo.icon} text-sm"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-800 text-xs truncate">${t.description}</h4>
+                        <p class="text-[10px] text-gray-400">${formatDate(t.date)}</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <span class="font-bold ${amountColor} text-xs">${sign}${formatRupiah(t.amount)}</span>
+                    </div>
+                `;
+                container.appendChild(item);
             });
         };
 
@@ -536,7 +768,6 @@
                 if (isNaN(date)) return;
                 
                 const year = date.getFullYear();
-                
                 if (filterYear !== 'all' && year.toString() !== filterYear) return;
 
                 const monthKey = `${year}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -571,14 +802,18 @@
                         {
                             label: 'Pemasukan',
                             data: labels.length > 0 ? incomeData : [0],
-                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
-                            borderRadius: 6,
+                            backgroundColor: '#22c55e',
+                            borderRadius: 4,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
                         },
                         {
                             label: 'Pengeluaran',
                             data: labels.length > 0 ? expenseData : [0],
-                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                            borderRadius: 6,
+                            backgroundColor: '#ef4444',
+                            borderRadius: 4,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
                         }
                     ]
                 },
@@ -589,23 +824,23 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                boxWidth: 12,
-                                font: {
-                                    family: 'Inter',
-                                    size: 12
-                                }
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { family: 'Inter', size: 10, weight: '500' }
                             }
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#4b5563',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            padding: 8,
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += formatRupiah(context.parsed.y);
-                                    }
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) label += formatRupiahValueOnly(context.parsed.y);
                                     return label;
                                 }
                             }
@@ -614,28 +849,12 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                font: {
-                                    family: 'Inter',
-                                    size: 10
-                                },
-                                callback: function(value) {
-                                    if (value >= 1000000) {
-                                        return (value / 1000000) + 'jt';
-                                    } else if (value >= 1000) {
-                                        return (value / 1000) + 'rb';
-                                    }
-                                    return value;
-                                }
-                            }
+                            grid: { color: '#f3f4f6', drawBorder: false },
+                            ticks: { font: { family: 'Inter', size: 9 }, color: '#9ca3af' }
                         },
                         x: {
-                            ticks: {
-                                font: {
-                                    family: 'Inter',
-                                    size: 11
-                                }
-                            }
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { family: 'Inter', size: 9 }, color: '#6b7280' }
                         }
                     }
                 }
@@ -675,6 +894,7 @@
             
             if (!isNaN(newTarget) && newTarget >= 0) {
                 targetBalance = newTarget;
+                localStorage.setItem('target_balance', targetBalance);
                 updateSummary();
                 closeTargetModal();
             }
@@ -697,18 +917,19 @@
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0', 'pointer-events-none');
-                document.getElementById('modal-content').classList.remove('scale-95');
+                document.getElementById('modal-content').classList.remove('translate-y-full', 'md:translate-y-8', 'md:scale-95');
             }, 10);
-            document.getElementById('amount').focus();
+            setTimeout(() => document.getElementById('amount').focus(), 300);
         };
 
         const closeModal = () => {
             modal.classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('modal-content').classList.add('scale-95');
+            document.getElementById('modal-content').classList.add('translate-y-full', 'md:translate-y-8', 'md:scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
                 form.reset();
                 updateCategoryOptions();
+                updateRadioIndicator(document.querySelector('input[name="type"]:checked'));
             }, 300);
         };
 
@@ -724,7 +945,7 @@
             }
 
             if (transactions.length === 0 && !cachedData) {
-                emptyState.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-4xl mb-3 text-blue-500"></i><p>Memuat data dari Spreadsheet...</p>';
+                emptyState.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 brimo-text-primary"></i><p>Memuat data mutasi...</p>';
                 emptyState.style.display = 'block';
             }
 
@@ -737,7 +958,7 @@
                     try {
                         result = JSON.parse(responseText);
                     } catch (parseErr) {
-                        throw new Error("Gagal membaca respon dari Apps Script. Pastikan deployment sudah benar.");
+                        throw new Error("Gagal membaca respon dari Apps Script.");
                     }
                     
                     if (result.status === "success" && result.data) {
@@ -748,7 +969,7 @@
                 } catch (error) {
                     console.error("Gagal mengambil data:", error);
                     if(transactions.length === 0) {
-                        emptyState.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-4xl mb-3 text-red-400"></i><p class="text-xs text-red-600 font-medium px-4 mt-2">Gagal memuat:<br>${error.message}</p><button onclick="loadDataFromSpreadsheet()" class="mt-3 text-xs bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition-colors">Coba Lagi</button>`;
+                        emptyState.innerHTML = `<div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-triangle-exclamation text-2xl text-red-400"></i></div><p class="text-sm font-medium text-gray-700">Koneksi Gagal</p><p class="text-xs text-gray-500 px-4 mt-1">${error.message}</p><button onclick="loadDataFromSpreadsheet()" class="mt-4 text-xs brimo-text-primary border border-[#00529C] px-4 py-2 rounded-full font-semibold hover:bg-blue-50 transition-colors">Coba Lagi</button>`;
                     }
                 }
             } else {
@@ -762,7 +983,7 @@
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
             
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Memproses...';
             submitBtn.disabled = true;
 
             const type = document.querySelector('input[name="type"]:checked').value;
@@ -891,10 +1112,33 @@
             updateSummary();
             renderTransactions();
             updateChartFilterOptions();
-            if (!document.getElementById('view-chart').classList.contains('hidden')) {
+            if (activeMainPage === 'aktivitas' && !document.getElementById('view-chart').classList.contains('hidden')) {
                 renderMonthlyChart();
             }
         };
+
+        window.updateRadioIndicator = (radio) => {
+            const indicator = document.getElementById('radio-indicator');
+            if(radio.value === 'income') {
+                indicator.style.transform = 'translateX(0)';
+            } else {
+                indicator.style.transform = 'translateX(100%)';
+            }
+        };
+
+        document.getElementById('toggle-balance').addEventListener('click', function() {
+            isBalanceHidden = !isBalanceHidden;
+            const icon = this.querySelector('i');
+            if (isBalanceHidden) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+            updateSummary();
+            renderTransactions();
+        });
 
         const formatNumberInput = (inputEl) => {
             inputEl.addEventListener('input', function(e) {
@@ -905,6 +1149,15 @@
 
         formatNumberInput(document.getElementById('amount'));
         formatNumberInput(document.getElementById('target-input'));
+
+        const handleLogout = () => {
+            sessionStorage.removeItem('isLoggedIn');
+            const loginScreen = document.getElementById('login-screen');
+            loginScreen.classList.remove('hidden');
+            setTimeout(() => {
+                loginScreen.classList.remove('opacity-0');
+            }, 10);
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             updateHeaderDate();
@@ -918,17 +1171,26 @@
                 const user = document.getElementById('username').value;
                 const pass = document.getElementById('password').value;
                 const errorMsg = document.getElementById('login-error');
+                const btn = e.target.querySelector('button');
                 
                 if (user === 'Robert' && pass === 'saragih123') {
                     errorMsg.classList.add('hidden');
-                    const loginScreen = document.getElementById('login-screen');
-                    loginScreen.classList.add('opacity-0');
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+                    
                     setTimeout(() => {
-                        loginScreen.classList.add('hidden');
-                    }, 500);
-                    sessionStorage.setItem('isLoggedIn', 'true');
+                        const loginScreen = document.getElementById('login-screen');
+                        loginScreen.classList.add('opacity-0');
+                        setTimeout(() => {
+                            loginScreen.classList.add('hidden');
+                            btn.innerHTML = 'Login';
+                        }, 500);
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                    }, 800);
                 } else {
                     errorMsg.classList.remove('hidden');
+                    const formContainer = document.getElementById('login-form');
+                    formContainer.classList.add('animate-pulse');
+                    setTimeout(() => formContainer.classList.remove('animate-pulse'), 500);
                 }
             });
 
